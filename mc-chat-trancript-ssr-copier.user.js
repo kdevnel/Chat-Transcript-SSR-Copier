@@ -17,9 +17,10 @@ function addSSRCopyButton() {
     $('.hapdash-chat .hapdash-chat-bubble.type-message.chat-MessageToOperator').each(function () {
         var messageContents = $(this).find('p:nth-of-type(1)').html();
         if (messageContents.startsWith("Website Status Report") || messageContents.startsWith("System Status Report") || messageContents.includes("### WordPress Environment ###")) {
-            $(this).find('div:nth-of-type(1)').after('<div class="link-bubble-copy"><p><a href="#" class="copy-SSR">Copy SSR to clipboard</a></p></div>');
+            $(this).find('div:nth-of-type(1)').after('<div class="ssr-copy-link"><p><a href="#" class="copy-SSR">Copy SSR to clipboard</a></p></div>');
         }
     });
+    $('.hapdash-card-header h3').after('<div class="ssr-copy-link"><p><a href="#" class="copy-SSR">Copy SSR to clipboard</a></p></div>');
 }
 
 function copyTranscriptSSR() {
@@ -30,7 +31,7 @@ function copyTranscriptSSR() {
         var thisSSRid = Math.floor(Math.random() * 90000) + 10000;
         var btnID = 'copy-';
         $thisMessage.attr('data-ssr', thisSSRid).wrapInner('<div id="ssr-contents-' + thisSSRid + '"></div>');
-        $('.link-bubble-copy .copy-SSR').attr('id', btnID + thisSSRid).attr('data-ssr', thisSSRid);
+        $('.ssr-copy-link .copy-SSR').attr('id', btnID + thisSSRid).attr('data-ssr', thisSSRid);
     });
 }
 
