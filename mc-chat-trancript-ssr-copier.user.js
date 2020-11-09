@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Happychat Transcript SSR Copy
+// @name         MC Chat Transcript SSR Copier
 // @namespace    https://github.com/kdevnel/Chat-transcripts-ssr
 // @version      0.1
 // @description  Add the ability to copy the SSR from a chat transcript
