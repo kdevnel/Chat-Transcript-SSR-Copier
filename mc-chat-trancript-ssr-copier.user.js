@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MC Chat Transcript SSR Copier
 // @namespace    https://github.com/kdevnel/Chat-transcripts-ssr
-// @version      0.1
+// @version      0.11
 // @description  Add the ability to copy the SSR from a chat transcript
 // @author       kdevnel
 // @require      https://code.jquery.com/jquery-1.12.4.js
@@ -11,55 +11,6 @@
 // ==/UserScript==
 
 var $ = window.jQuery;
-
-function url2links() {
-    $('#transcript .hapdash-chat-bubble div p').each(function () {
-        var str = $(this).html();
-        var regexlink = /(\b(https?|):\/\/(?!d.pr\/)(?!snipboard.io\/)[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig; // Default links
-        // Replace plain text links by hyperlinks
-        var replaced_text = str.replace(regexlink, "<a href='$1' target='_blank'>$1</a>");
-        $(this).html(replaced_text);
-    });
-}
-
-function droplrEmbed() {
-    $('#transcript .hapdash-chat-bubble div p').each(function () {
-        var str = $(this).html();
-        var regexdroplr = /(\b(https?|):\/\/(\bd\.pr)[-A-Z0-9+&@#\/%=~._|]*)/ig; // Droplr links
-        var replaced_droplr = str.replace(regexdroplr, "<a href='$1' target='_blank'><img src='$1+' style='margin: 20px 0 0 0; max-width:90%; background: #e0e0e0; border: solid 1px #000000;'></a><br>Full size: <a href='$1' target='_blank'>$1</a>");
-        $(this).html(replaced_droplr);
-    });
-}
-
-function snipBoardEmbed() {
-    $('#transcript .hapdash-chat-bubble div p').each(function () {
-        var str = $(this).html();
-        var regexsnipboard = /(\b(https?|):\/\/(\bsnipboard\.io\/)[^ ][-A-Z0-9+&@#\/%=~._|]*)/ig; // Snipboard links
-        var replaced_snipboard = str.replace(regexsnipboard, "<a href='$1' target='_blank'><img src='$1' style='margin: 20px 10px 0 0; max-width:90%; background: #e0e0e0; border: solid 1px #000000;'></a><br>Full size: <a href='$1' target='_blank'>$1</a>");
-        $(this).html(replaced_snipboard);
-    });
-}
-
-function removeEnglishTranslation() {
-    $('.chat-message-annotation-separator').each(function () {
-        var msgBefore = $(this).parent().find('p:nth-of-type(1)').html();
-        var msgAfter = $(this).parent().find('p:nth-of-type(2)').html();
-        if (msgBefore == msgAfter) {
-            $(this).parent().find('p:nth-of-type(1)').remove();
-            $(this).remove();
-        }
-    });
-}
-
-function highlightNotes() {
-    // Highlight all notes written by HE
-    $('.hapdash-chat .hapdash-chat-bubble.type-event.chat-MessageToVisitor').each(function () {
-        var bubbleContents = $(this).find('p').html();
-        if ((bubbleContents != "chat transferred") && (bubbleContents != "customer left") && (!bubbleContents.startsWith("operator")) && (!bubbleContents.startsWith("Follow-up ticket"))) {
-            $(this).addClass('HEnote');
-        }
-    });
-}
 
 function collapseSSR() {
     // Collapse the entire SSR
@@ -87,7 +38,6 @@ function copyTranscriptSSR() {
 
     });
 }
-
 
 // === Copy the SSR to the clipboard ===================================================
 $("body").on('click', '.copy-SSR', function () {
@@ -150,11 +100,6 @@ function copyToClipboard(elem) {
 
 /* Hook all of the necessary functions to page load */
 $(document).ready(function () {
-    url2links();
-    droplrEmbed();
-    snipBoardEmbed();
-    removeEnglishTranslation();
-    highlightNotes();
     collapseSSR();
     copyTranscriptSSR();
 });
