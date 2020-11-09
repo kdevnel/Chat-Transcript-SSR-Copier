@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MC Chat Transcript SSR Copier
 // @namespace    https://github.com/kdevnel/Chat-transcripts-ssr
-// @version      0.11
+// @version      1.0
 // @description  Add the ability to copy the SSR from a chat transcript
 // @author       kdevnel
 // @require      https://code.jquery.com/jquery-1.12.4.js
@@ -12,13 +12,11 @@
 
 var $ = window.jQuery;
 
-function collapseSSR() {
+function addSSRCopyButton() {
     // Collapse the entire SSR
     $('.hapdash-chat .hapdash-chat-bubble.type-message.chat-MessageToOperator').each(function () {
         var messageContents = $(this).find('p:nth-of-type(1)').html();
         if (messageContents.startsWith("Website Status Report") || messageContents.startsWith("System Status Report") || messageContents.includes("### WordPress Environment ###")) {
-            $(this).find('div:nth-of-type(1)').after('<div class="link-bubble"><p><a href="#" class="show-ssr-transcript" onClick="return false;">CLICK HERE TO SHOW SSR</a></p></div>');
-            $(this).find('div:nth-of-type(1)').addClass('ssr-message').hide();
             $(this).find('div:nth-of-type(1)').after('<div class="link-bubble-copy"><p><a href="#" class="copy-SSR">Copy SSR to clipboard</a></p></div>');
         }
     });
@@ -32,10 +30,7 @@ function copyTranscriptSSR() {
         var thisSSRid = Math.floor(Math.random() * 90000) + 10000;
         var btnID = 'copy-';
         $thisMessage.attr('data-ssr', thisSSRid).wrapInner('<div id="ssr-contents-' + thisSSRid + '"></div>');
-        $thisMessage.append('<a href="#" class="copy-SSR" id="copy-' + thisSSRid + '" data-ssr="' + thisSSRid + '" style="font-size: 16px;">Copy SSR to clipboard</a>');
         $('.link-bubble-copy .copy-SSR').attr('id', btnID + thisSSRid).attr('data-ssr', thisSSRid);
-
-
     });
 }
 
@@ -43,8 +38,8 @@ function copyTranscriptSSR() {
 $("body").on('click', '.copy-SSR', function () {
     var SSRid = $(this).attr('data-ssr');
     copyToClipboard(document.getElementById('ssr-contents-' + SSRid));
-    $(this).html('COPIED!');
-    setTimeout(function () { $('.copy-SSR').text('Copy SSR to clipboard') }, 3000);
+    $(this).html('COPIED!').addClass('ssr-copied');
+    setTimeout(function () { $('.copy-SSR').removeClass('ssr-copied').text('Copy SSR to clipboard') }, 5000);
 });
 
 // === Helper function: copy to clipboard ===================================================
@@ -98,9 +93,19 @@ function copyToClipboard(elem) {
     return succeed;
 }
 
+function addStyles() {
+    // Styles that are specific to this script
+    var styles = "<style type='text/css' class='ssr-copier-styles'>.copy-SSR{transition:background 0.3s;} .ssr-copied{background-color:#26eba1;color:#fff;}</style>";
+    // Attach styles to <head>
+    if (!$('.ssr-copier-styles').length) {
+        document.head.insertAdjacentHTML('beforeend', styles);
+    }
+}
+
 /* Hook all of the necessary functions to page load */
 $(document).ready(function () {
-    collapseSSR();
+    addStyles();
+    addSSRCopyButton();
     copyTranscriptSSR();
 });
 
