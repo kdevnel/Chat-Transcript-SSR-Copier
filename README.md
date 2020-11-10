@@ -14,5 +14,5 @@ With Tampermonkey, you can add your own custom Javascript code to any site, to m
 ## INSTALLATION:
 
 * Install Tampermonkey extension
-* Go to https://github.com/kdevnel/Chat-Transcript-SSR-Copier/raw/main/mc-chat-trancript-ssr-copy.user.js
+* Go to https://github.com/kdevnel/Chat-Transcript-SSR-Copier/raw/main/mc-chat-trancript-ssr-copier.user.js
 * Select the INSTALL button.
