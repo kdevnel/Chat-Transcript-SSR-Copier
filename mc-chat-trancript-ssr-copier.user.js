@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MC Chat Transcript SSR Copier
 // @namespace    https://github.com/kdevnel/Chat-transcripts-ssr
-// @version      1.0
-// @description  Add the ability to copy the SSR from a chat transcript
+// @version      1.2
+// @description  Add the ability to copy the SSR from a chat transcript - requires the Happychat Transcript Optimizer by Senff
 // @author       kdevnel
 // @require      https://code.jquery.com/jquery-1.12.4.js
 // @match        https://mc.a8c.com/support-stats/happychat/*
@@ -13,14 +13,7 @@
 var $ = window.jQuery;
 
 function addSSRCopyButton() {
-    // Collapse the entire SSR
-    $('.hapdash-chat .hapdash-chat-bubble.type-message.chat-MessageToOperator').each(function () {
-        var messageContents = $(this).find('p:nth-of-type(1)').html();
-        if (messageContents.startsWith("Website Status Report") || messageContents.startsWith("System Status Report") || messageContents.includes("### WordPress Environment ###")) {
-            $(this).find('div:nth-of-type(1)').after('<div class="ssr-copy-link"><p><a href="#" class="copy-SSR">Copy SSR to clipboard</a></p></div>');
-        }
-    });
-    $('.hapdash-card-header h3').after('<div class="ssr-copy-link"><p><a href="#" class="copy-SSR">Copy SSR to clipboard</a></p></div>');
+    $('.hapdash-card-header h3').after('<div class="ssr-copy-link"><a href="javascript:void(0);" class="copy-SSR">Copy SSR to clipboard</a></div>');
 }
 
 function copyTranscriptSSR() {
@@ -96,7 +89,7 @@ function copyToClipboard(elem) {
 
 function addStyles() {
     // Styles that are specific to this script
-    var styles = "<style type='text/css' class='ssr-copier-styles'>.copy-SSR{transition:background 0.3s;} .ssr-copied{background-color:#26eba1;color:#fff;}</style>";
+    var styles = "<style type='text/css' class='ssr-copier-styles'>.ssr-copy-link{width:100%;text-align:right;}.copy-SSR{transition:background0.3s;display:inline-block;} .ssr-copied{background-color:#26eba1;color:#fff;}</style>";
     // Attach styles to <head>
     if (!$('.ssr-copier-styles').length) {
         document.head.insertAdjacentHTML('beforeend', styles);
@@ -108,9 +101,4 @@ $(document).ready(function () {
     addStyles();
     addSSRCopyButton();
     copyTranscriptSSR();
-});
-
-$('body').on('click', '.show-ssr-transcript', function () {
-    $('.link-bubble').remove();
-    $('.ssr-message').slideDown();
 });
